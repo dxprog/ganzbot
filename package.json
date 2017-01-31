@@ -1,0 +1,19 @@
+{
+  "name": "ganzbot",
+  "version": "1.0.0",
+  "description": "I am Ganzbot. Is your markup semantic?",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dxprog/ganzbot.git"
+  },
+  "author": "Matt Hackmann",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/dxprog/ganzbot/issues"
+  },
+  "homepage": "https://github.com/dxprog/ganzbot#readme"
+}
