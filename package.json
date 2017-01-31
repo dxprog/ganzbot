@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dxprog/ganzbot/issues"
   },
-  "homepage": "https://github.com/dxprog/ganzbot#readme"
+  "homepage": "https://github.com/dxprog/ganzbot#readme",
+  "dependencies": {
+    "bluetooth-serial-port": "^2.1.1"
+  }
 }
