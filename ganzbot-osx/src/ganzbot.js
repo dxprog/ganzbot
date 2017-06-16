@@ -30,11 +30,21 @@ function Ganzbot(options) {
  * @param {string} emotion The emotion to set. Defaults to "Neutral"
  */
 Ganzbot.prototype.queue = function queue(msg, emotion) {
-  emotion = emotion || 'Neutral';
-  this._queue.push({
-    msg: msg,
-    emotion: emotion
-  });
+  var self = this;
+  if (Array.isArray(msg)) {
+    msg.forEach(function(msg) {
+      self._queue.push({
+        msg: msg.msg,
+        emotion: msg.emotion
+      });
+    });
+  } else {
+    emotion = emotion || 'Neutral';
+    this._queue.push({
+      msg: msg,
+      emotion: emotion
+    });
+  }
   this._processQueue();
 };
 
@@ -81,20 +91,28 @@ Ganzbot.prototype.setEmotion = function setEmotion(emotion) {
  * @private
  */
 Ganzbot.prototype._processQueue = function processQueue() {
-  if (this._queue.length) {
-    if (!this._speaking) {
-      var msg = this._queue.shift();
-      var self = this;
-      this._speaking = true;
-      this.setEmotion(msg.emotion)
+  var self = this;
+
+  function debounceQueue() {
+    clearTimeout(self._queueTimer);
+    self._queueTimer = setTimeout(self._processQueue.bind(self), QUEUE_DEBOUNCE);
+  }
+
+  if (self._queue.length) {
+    if (!self._speaking) {
+      var msg = self._queue.shift();
+      self._speaking = true;
+      self.setEmotion(msg.emotion)
         .then(function() {
           return self.say(msg.msg);
         }).then(function() {
           self._speaking = false;
+
+          // Keep the queue going
+          debounceQueue();
         });
     } else {
-      clearTimeout(this._queueTimer);
-      this._queueTimer = setTimeout(this._processQueue.bind(this), QUEUE_DEBOUNCE);
+      debounceQueue();
     }
   }
 };
@@ -121,7 +139,7 @@ Ganzbot.prototype._handleSerialData = function handleSerialData(data) {
     isInitialized = true;
     console.log('[ganzbot] Initialized and ready to go!');
   } else {
-    console.log('[ganzbot]', data);
+    console.log('[ganzbot]', data.toString());
   }
 };
 

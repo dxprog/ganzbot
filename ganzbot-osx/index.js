@@ -11,6 +11,8 @@ function handleWSMessage(data) {
     data = JSON.parse(data.toString());
     if (data.msg && data.emotion) {
       ganzbot.queue(data.msg, data.emotion);
+    } else if (Array.isArray(data)) {
+      ganzbot.queue(data);
     }
   } catch (exc) {
     console.error(exc);
