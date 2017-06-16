@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ganzbot</title>
+  </head>
+  <body>
+    <label for="emoNeutral">
+      <input type="radio" name="emotion" value="Neutral" id="emoNeutral" checked="checked"> Neutral
+    </label>
+    <label for="emoAngry">
+      <input type="radio" name="emotion" value="Angry" id="emoAngry"> Angry
+    </label>
+    <label for="emoSad">
+      <input type="radio" name="emotion" value="Sad" id="emoSad"> Sad
+    </label>
+    <input type="text" placeholder="What to say" id="msg" />
+    <button type="button" id="btnSay">Say</button>
+    <script>
+      (function() {
+        var btnSay = document.getElementById('btnSay');
+        var txtMsg = document.getElementById('msg');
+        var socket = new WebSocket('ws://localhost:8080');
+        socket.onopen = function() {
+          console.log('looks like we are open for biz');
+        };
+
+        btnSay.addEventListener('click', function() {
+          var emotion = document.querySelector('input[name=emotion]:checked');
+          emotion = emotion ? emotion.value : 'Neutral';
+          socket.send(JSON.stringify({
+            emotion: emotion,
+            msg: msg.value
+          }));
+        });
+
+      }());
+    </script>
+  </body>
+</html>
