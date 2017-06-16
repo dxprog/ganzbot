@@ -2,8 +2,10 @@
 <html>
   <head>
     <title>Ganzbot</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
   </head>
   <body>
+    <input type="text" id="username" placeholder="Who are you?" />
     <label for="emoNeutral">
       <input type="radio" name="emotion" value="Neutral" id="emoNeutral" checked="checked"> Neutral
     </label>
@@ -14,26 +16,15 @@
       <input type="radio" name="emotion" value="Sad" id="emoSad"> Sad
     </label>
     <input type="text" placeholder="What to say" id="msg" />
+    <button type="button" id="btnAdd">Add</button>
+    <h2>Your Message</h2>
+    <ul id="thingsToSay"></ul>
     <button type="button" id="btnSay">Say</button>
-    <script>
-      (function() {
-        var btnSay = document.getElementById('btnSay');
-        var txtMsg = document.getElementById('msg');
-        var socket = new WebSocket('ws://localhost:8080');
-        socket.onopen = function() {
-          console.log('looks like we are open for biz');
-        };
 
-        btnSay.addEventListener('click', function() {
-          var emotion = document.querySelector('input[name=emotion]:checked');
-          emotion = emotion ? emotion.value : 'Neutral';
-          socket.send(JSON.stringify({
-            emotion: emotion,
-            msg: msg.value
-          }));
-        });
-
-      }());
-    </script>
+    <h2>Past Messages</h2>
+    <ul id="pastMessages">
+      <li><blockquote>Could you get me a beer?</blockquote> - Dennis Hengeveld, Jan 3, 2009 7:45pm</li>
+    </ul>
+    <script src="./scripts.js"></script>
   </body>
 </html>
