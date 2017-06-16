@@ -43,7 +43,8 @@ Emotion currentEmotion;
 
 void setup() {
   Serial.begin(BAUD_RATE);
-  
+  Serial.print("B\n"); // Tell Ganzbot controller that we're online
+
   leftEyebrow.attach(PIN_LEFT_EYEBROW);
   rightEyebrow.attach(PIN_RIGHT_EYEBROW);
 
@@ -117,24 +118,53 @@ void loop() {
   }
 
   if (Serial.available() > 0) {
-    char data = Serial.read();
-    switch (data) {
-      // Check both for the numeric value and the ASCII version
+
+    // This is to get around Jeremy's limited command set
+    // littered with new lines
+    char cmd;
+    while (Serial.available() > 0) {
+      char data = Serial.read();
+      if (data != '\n') {
+        cmd = data;
+      }
+    }
+    
+    switch (cmd) {
+      // Check both for the numeric value, the ASCII version
+      // of said number, and BC derived from GanzBot.java
       case '0':
       case 0:
         setEmotion(off);
         break;
       case '1':
       case 1:
+      case '|':
         setEmotion(neutral);
         break;
       case '2':
       case 2:
+      case '>':
         setEmotion(angry);
         break;
       case '3':
       case 3:
+      case '(':
         setEmotion(sad);
+        break;
+
+      // Ganzbot controller commands
+      case 'R':
+        // Ganzbot is about to speak
+        setEmotion(neutral);
+        Serial.print("R\n");
+        break;
+      case 'S':
+        // Ganzbot controller is speaking
+        setEmotion(angry);
+        break;
+      case 'E':
+        // Ganzbot has finished speaking
+        setEmotion(off);
         break;
     }
   }
